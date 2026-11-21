@@ -1,0 +1,1 @@
+const GIPHY_API_KEY= "YOUR_GIPHY_KEY";
