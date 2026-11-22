@@ -13,10 +13,17 @@ function fetchGif() {
   message.textContent = "";
   fetch(`https://api.giphy.com/v1/gifs/random?api_key=${GIPHY_API_KEY}&tag=cats&rating=g`)
     .then(function(response) {
+      if (!response.ok) {
+        throw new Error(`HTTP status ${response.status}`);
+      }
       return response.json();
     })
     .then(function(gifData) {
       img.src = gifData.data.images.original.url;
+    })
+    .catch(function(error) {
+      message.textContent = `Something went wrong`;
+      console.error(error.message);
     });
 }
 function searchGif(event) {
@@ -25,7 +32,7 @@ function searchGif(event) {
   message.textContent = "";
   
 
-  fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${searchText}&rating=g&limit=10`)
+  fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(searchText)}&rating=g&limit=10`)
     .then(function(response) {
       if (!response.ok) {
         throw new Error(`HTTP status ${response.status}`);
@@ -41,9 +48,9 @@ function searchGif(event) {
       img.src = gifData.data[randomIndex].images.original.url;
     })
     .catch(function(error) {
-      message.textContent = `Something gone wrong`;
+      message.textContent = `Something went wrong`;
       console.error(error.message);
-    })
+    });
 
 }
 gifButton.addEventListener('click', fetchGif);
